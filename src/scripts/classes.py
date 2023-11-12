@@ -31,6 +31,14 @@ class Label(Enum):
   @classmethod
   def string_label(cls, label: int):
     return cls.__labels[label]
+  
+  @classmethod
+  def all_labels(cls):
+    return list(cls.__labels.values())
+
+  @classmethod
+  def label_mappings(cls):
+    return cls.__labels
 
 class Sample:
   __img_name: str

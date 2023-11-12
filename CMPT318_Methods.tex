@@ -51,7 +51,7 @@
 	\section{Approach}
 	
 	For classifying the images in the data set, a Convolutional Neural Network will be used to extract and learn good features, then a regular Artificial Neural Network will be used for classifying the image. The Convolutional Neural Network's learned features will be fed as input into the Artificial Neural Network to be used for classifying the image. Since it is a multi-classification problem, the Artificial Neural Network will be using SoftMax at the output layer to predict which class the image belongs to.\\
-	From researching possible architectures, the VGG16 architecture seems the most promising for image classifications. As a result, I will implementing a model using the VGG16 model. I will also train another model by manually setting up the layers of the model. The results from the two models will be compared and the best performing model will be selected as the final model for submission.\\
+	From researching possible architectures, the VGG16 architecture seems the most promising for image classifications. As a result, I will implementing a model using the VGG16 model and tuning it to my use case, which is land use classification. I will also train another model by manually setting up the layers of the model. The results from the two models will be compared and the best performing model will be selected as the final model for submission.\\
 	For implementing these neural network models in code, I will be using the tensorflow package in Python. Some important parameters used to fit the model will include:
 	\begin{itemize}
 		\item epoch: specify how many iterations the model will be trained for
@@ -60,13 +60,33 @@
 		\item learning\_rate: the pace at which the algorithm updates its weights
 		\item schedule: a schedule to specify the decay or decrease of the learning rate
 	\end{itemize}
-
+	
+	In terms of tensorflow implementation, convolution layers will be used to learn good features, then they are flattened and inputted into a regular dense layer for prediction.
 	
 	
 	\section{Measures of Performance}
 	
 	Some metrics used to gauge performance of the models will be the accuracy metric, the loss metric, the recall metric, and the precision metric. Naturally, the recall and precision metric will be produced from a confusion matrix, which will be included as a table/matrix as part of the performance report.
+
+%	\pagebreak	
+
+	\begin{figure*}[h]
+		\centering
+		\includegraphics[scale=0.7]{src/images/Fig1.png}\\
+		Figure 1. Dataset Figure - Number of images per category label
+		
+		\vspace{2cm}
+		
+		\centering
+		\includegraphics[scale=0.5]{src/images/Fig3.png}\\
+		Figure 2a. Proposed Results figure - Accuracy and Loss measured at each Epoch
+	\end{figure*}
 	
 	
+	\begin{figure*}[h]
+		\centering
+		\includegraphics[scale=0.5]{src/images/Fig3b.png}\\
+		Figure 2b. Proposed Results figure - Confusion Matrix and its corresponding Recall and Precision scores
+	\end{figure*}
 \end{document}
 \endinput
