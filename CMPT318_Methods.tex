@@ -36,12 +36,12 @@
 	\maketitle
 	
 	\section{Introduction}
-	This report will outline the structure and approach used to solve the satellite image classification problem.\\
-	\href{https://git.cs.usask.ca/vtl932/cmpt318_course_project}{The project repository here}.\\
+	This report will outline the structure and approach used to solve the satellite land use image classification problem.\\
+	\href{https://git.cs.usask.ca/vtl932/cmpt318_course_project}{The project repository can be found here}.\\
 	\href{https://www.kaggle.com/datasets/apollo2506/eurosat-dataset?select=EuroSAT}{The Kaggle Dataset can be found here}.
 	
 	\section{Pre-processing}
-	The data set of satellite images provided by Kaggle is well prepared. All images provided are 64x64 RGB images and has a Ground Sampling size of 10 meters. The images do not appear to contain any significant noise that warrants de-noising to occur. Furthermore, all JPG and csv files are not corrupted. However, the provided TIF files do not work; I was not able to open these TIF files in any sort of application. The TIF files live in EuroSatData/allBands.\\
+	The data set of satellite images provided by Kaggle is well prepared. All provided images are 64x64 RGB images and has a Ground Sampling size of 10 meters. The images do not appear to contain any significant noise that warrants de-noising to occur. Furthermore, all JPG and csv files are not corrupted. However, the provided TIF files do not work; I was not able to open these TIF files in any sort of application. The TIF files are in EuroSatData/allBands.\\
 	Typically, the RGB values for images are between (0,255), however, I will be working with the range (0,1) for these images; in other words, I will be working with the images in float instead of unsigned integers.
 	
 		\subsection{Data set split}
@@ -51,8 +51,10 @@
 	\section{Approach}
 	
 	For classifying the images in the data set, a Convolutional Neural Network will be used to extract and learn good features, then a regular Artificial Neural Network will be used for classifying the image. The Convolutional Neural Network's learned features will be fed as input into the Artificial Neural Network to be used for classifying the image. Since it is a multi-classification problem, the Artificial Neural Network will be using SoftMax at the output layer to predict which class the image belongs to.\\
-	From researching possible architectures, the VGG16 architecture seems the most promising for image classifications. As a result, I will implementing a model using the VGG16 model and tuning it to my use case, which is land use classification. I will also train another model by manually setting up the layers of the model. The results from the two models will be compared and the best performing model will be selected as the final model for submission.\\
-	For implementing these neural network models in code, I will be using the tensorflow package in Python. Some important parameters used to fit the model will include:
+	From researching possible architectures, the VGG16 architecture seems the most promising for image classifications. As a result, I will implementing a model using the VGG16 model and tuning it to my use case, which is land use classification. I will first freeze the CNN layers and fine tune the dense layers to fit my use case. Then adjust any hyper-parameters as needed when training and validating.\\
+	I will also train another model by manually setting up the layers of the model. The results from the two models will be compared and the best performing model will be selected as the final model for submission.\\
+	For implementing these neural network models in code, I will be using the tensorflow library in Python. 
+	Some important parameters used to fit the model will include:
 	\begin{itemize}
 		\item epoch: specify how many iterations the model will be trained for
 		\item batch\_size: specify the batch size for training
@@ -66,9 +68,9 @@
 	
 	\section{Measures of Performance}
 	
-	Some metrics used to gauge performance of the models will be the accuracy metric, the loss metric, the recall metric, and the precision metric. Naturally, the recall and precision metric will be produced from a confusion matrix, which will be included as a table/matrix as part of the performance report.
+	Some metrics used to gauge performance of the models will be the accuracy metric, the loss metric, the recall metric, and the precision metric. Naturally, the recall and precision metric will be produced from a confusion matrix, which will be included as a table/matrix as part of the performance report.\\
+	The confusion matrix, recall metric and precision metric are new additions to my Proposed Results which were not present in the previously submitted Project Proposal.
 
-%	\pagebreak	
 
 	\begin{figure*}[h]
 		\centering
