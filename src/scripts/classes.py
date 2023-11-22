@@ -6,7 +6,7 @@ import pandas as pd
 class Label(Enum):
   ANNUALCROP = 0
   FOREST = 1
-  HERBACEOUSVEGETATIOM = 2
+  HERBACEOUSVEGETATION = 2
   HIGHWAY = 3
   INDUSTRIAL = 4
   PASTURE = 5
@@ -15,30 +15,23 @@ class Label(Enum):
   RIVER = 8
   SEALAKE = 9
 
-  __labels = {
-    ANNUALCROP: "AnnualCrop",
-    FOREST: "Forest",
-    HERBACEOUSVEGETATIOM: "HerbaceousVegetation",
-    HIGHWAY: "Highway",
-    INDUSTRIAL: "Industrial",
-    PASTURE: "Pasture",
-    PERMANENTCROP: "PermanentCrop",
-    RESIDENTIAL: "Residential",
-    RIVER: "River",
-    SEALAKE: "SeaLake"
-  }
-
   @classmethod
-  def string_label(cls, label: int):
-    return cls.__labels[label]
-  
-  @classmethod
-  def all_labels(cls):
-    return list(cls.__labels.values())
-
-  @classmethod
-  def label_mappings(cls):
-    return cls.__labels
+  def label_mappings(cls, encoded=False):
+    decoded_mappings = {
+      "AnnualCrop": 0,
+      "Forest": 1,
+      "HerbaceousVegetation": 2,
+      "Highway": 3,
+      "Industrial": 4,
+      "Pasture": 5,
+      "PermanentCrop": 6,
+      "Residential": 7,
+      "River": 8,
+      "SeaLake": 9
+    }
+    if encoded:
+      return {value: key for key, value in decoded_mappings.items()}
+    return decoded_mappings
 
 class Sample:
   __img_name: str
