@@ -7,9 +7,9 @@ def parseargs():
     parser.add_argument("-e", "--epoch")
     parser.add_argument("-b", "--batch_size")
     args = parser.parse_args()
-    print(args.epoch)
-
+    return args.data_dir, args.epoch, args.batch_size
 
 
 if __name__ == "__main__":
-    print(parseargs())
+    data_dir, epoch, batch_size = parseargs()
+    print(data_dir, epoch, batch_size)
