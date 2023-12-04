@@ -1,6 +1,5 @@
-CMPT318_ProjectProposal.*
-!CMPT318_ProjectProposal.tex
-CMPT318_Methods.*
-!CMPT318_Methods.tex
+
 /data
 /src/scripts/__pycache__
+latex/*
+!latex/*.tex
