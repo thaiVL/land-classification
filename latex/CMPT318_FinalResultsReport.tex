@@ -17,7 +17,7 @@
 \acmDOI{XXXXXXX.XXXXXXX}
 
 \begin{document}
-	\title{Land Use Classification Project Proposal}
+	\title{Land Use Classification Project Results}
 	
 	\author{Thai La}
 	\email{vtl932@usask.ca}
@@ -36,59 +36,73 @@
 	\maketitle
 	
 	\section{Introduction}
-	This report will outline the structure and approach used to solve the satellite land use image classification problem.\\
+	This report detail the results, the hyperparameter study for tuning, and road blocks that were encountered during this project..\\ \\
 	\href{https://git.cs.usask.ca/vtl932/cmpt318_course_project}{The project repository can be found here}.\\
 	\href{https://www.kaggle.com/datasets/apollo2506/eurosat-dataset?select=EuroSAT}{The Kaggle Dataset can be found here}.
 	
-	\section{Pre-processing}
-	The data set of satellite images provided by Kaggle is well prepared. All provided images are 64x64 RGB images and has a Ground Sampling size of 10 meters. The images do not appear to contain any significant noise that warrants de-noising to occur. Furthermore, all JPG and csv files are not corrupted. However, the provided TIF files do not work; I was not able to open these TIF files in any sort of application. The TIF files are in EuroSatData/allBands.\\
-	Typically, the RGB values for images are between (0,255), however, I will be working with the range (0,1) for these images; in other words, I will be working with the images in float instead of unsigned integers.
+	\section{Results}
+	The approach I took for this problem is to use a convolution neural network to learn good features for the images and then classified the images based on the learned features using a fully connected neural network.
+	\\
+	I used transfer learning for my convolutional layers. The architecture I used for the convolution neural network was the VGG16 architecture. I only kept the convolutional layers and disposed of the dense layers that came along with the VGG16 architecture; this allowed me to adapt the pre-learned model to work on my data set because the images of my data set were of size 64 x 64. I froze the convolutional layers so that its weights were no longer trainable, then I added 2 final layers for the neural network, then were:
 	
-		\subsection{Data set split}
-		
-		The training, validation, and test split for the image data set is already provided along side the images. The splits are detailed in the train.csv, validation.csv and test.csv files. The given splits contain 70\% for  training, 20\% for validation and 10\% for testing. I will be using the given data set splits to train the model.
-	
-	\section{Approach}
-	
-	For classifying the images in the data set, a Convolutional Neural Network will be used to extract and learn good features, then a regular Artificial Neural Network will be used for classifying the image. The Convolutional Neural Network's learned features will be fed as input into the Artificial Neural Network to be used for classifying the image. Since it is a multi-classification problem, the Artificial Neural Network will be using SoftMax at the output layer to predict which class the image belongs to.\\
-	From researching possible architectures, the VGG16 architecture seems the most promising for image classifications. As a result, I will implementing a model using the VGG16 model and tuning it to my use case, which is land use classification. I will first freeze the CNN layers and fine tune the dense layers to fit my use case. Then adjust any hyper-parameters as needed when training and validating.\\
-	I will also train another model by manually setting up the layers of the model. The results from the two models will be compared and the best performing model will be selected as the final model for submission.\\
-	For implementing these neural network models in code, I will be using the tensorflow library in Python. 
-	Some important parameters used to fit the model will include:
 	\begin{itemize}
-		\item epoch: specify how many iterations the model will be trained for
-		\item batch\_size: specify the batch size for training
-		\item training\_data: the data set used for training, including the x and y data set.
-		\item learning\_rate: the pace at which the algorithm updates its weights
-		\item schedule: a schedule to specify the decay or decrease of the learning rate
+		\item Flatten: to flatten the output of the convolutional neural networks and input it into the dense layer.
+		\item Dense: this dense layer is the output layer and contained only 10 units.
 	\end{itemize}
+	The activation function for the Dense layer was a softmax activation function.
+	I used an epoch of 6, batch size of 16, a learning rate of 0.001, the Adam optimizer, the sparse categorical cross entropy loss, and the accuracy metric.
+	\\
+	I was able to achieve an accuracy of 87\% for the test set. Please reference the figures in the next page for the accuracy and loss graph, and the confusion matrix.
 	
-	In terms of tensorflow implementation, convolution layers will be used to learn good features, then they are flattened and inputted into a regular dense layer for prediction.
+	\section{Hyperparameter study}
+	I performed a hyperparameter study on the trained model. A total of 5 sweeps were performed, each sweep with different hyperparameters.
+	\begin{itemize}
+		\item Sweep 1: Epochs: 10, Learning Rate: 0.001, Batch Size: 16
+		\item Sweep 2: Epochs: 10, Learning Rate: 0.001, Batch Size: 32
+		\item Sweep 3: Epochs: 8, Learning Rate: 0.0001, Batch Size: 64
+		\item Sweep 4: Epochs: 5, Learning Rate: 0.00001, Batch Size: 128
+		\item Sweep 5: Epochs: 15, Learning Rate: 0.001, Batch Size: 128
+	\end{itemize}
+	From figure 3a and figure 3b, you can see that sweep 1 consistently performs the best, thus I used the hyperparameters of sweep 1 for the model. However, instead of 10 epochs, I had only trained the model for 6 epochs, since any further training will result in overfitting.
+	
+	\section{Road-blocks}
+	All the road blocks I ran into were implementation-based as it was my first time using tensorflow.\\
+	One roadblock was when I tuned the hyperparameters of my model, such as epochs, batch size, etc., it did not correctly fit the model again since the weights were persistent. To resolve this, I re-compiled the model every time I changed the hyperparameters.
+	\\
+	Another road block I ran into was how to convert the numpy-representation of the image into tensor-representation of the image so that I can make use of hardware acceleration provided by Tensorflow. To resolve this, I created a utility function that converted a numpy array into a tensor.
 	
 	
-	\section{Measures of Performance}
 	
-	Some metrics used to gauge performance of the models will be the accuracy metric, the loss metric, the recall metric, and the precision metric. Naturally, the recall and precision metric will be produced from a confusion matrix, which will be included as a table/matrix as part of the performance report.\\
-	The confusion matrix, recall metric and precision metric are new additions to my Proposed Results which were not present in the previously submitted Project Proposal.
-
-
 	\begin{figure*}[h]
 		\centering
-		\includegraphics[scale=0.7]{src/images/Fig1.png}\\
-		Figure 1. Dataset Figure - Number of images per category label
+		\includegraphics[scale=0.5]{../src/images/FinalResults/Final_Dataset_figure.png}\\
+		Figure 1. Final Dataset Figure
+	\end{figure*}
+	
+	\begin{figure*}[h]
+		\centering
+		\includegraphics[scale=0.5]{../src/images/FinalResults/Final_Results_figure_a.png}\\
+		Figure 2a. Final Results Figure (a) - Training and Validation Loss and Accuracy per epoch
 		
 		\vspace{2cm}
 		
 		\centering
-		\includegraphics[scale=0.5]{src/images/Fig3.png}\\
-		Figure 2a. Proposed Results figure - Accuracy and Loss measured at each Epoch
+		\includegraphics[scale=0.5]{../src/images/FinalResults/Final_Results_figure_b.png}\\
+		Figure 2b. Final Results Figure (b) - Confusion matrix, precision and recall of prediction on the test set
 	\end{figure*}
-	
 	
 	\begin{figure*}[h]
 		\centering
-		\includegraphics[scale=0.5]{src/images/Fig3b.png}\\
-		Figure 2b. Proposed Results figure - Confusion Matrix and its corresponding Recall and Precision scores
+		\includegraphics[scale=0.4]{../src/images/FinalResults/Additional_Results_figure_a.png}\\
+		Figure 3a. Additional Results Figure (a) - Accuracy and Loss graphs per sweep
+		
+		\vspace{2cm}
+		
+		\centering
+		\includegraphics[scale=0.4]{../src/images/FinalResults/Additional_Results_figure_b.png}\\
+		Figure 3b. Additional Results Figure (b) - Accuracy and Loss graph, aggregated sweeps
+		
 	\end{figure*}
+	
 \end{document}
 \endinput
