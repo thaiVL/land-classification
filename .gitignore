@@ -3,3 +3,4 @@
 /src/scripts/__pycache__
 latex/*
 !latex/*.tex
+!latex/*.pdf
